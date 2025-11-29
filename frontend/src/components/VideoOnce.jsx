@@ -9,6 +9,8 @@ export default function VideoOnce({ src, storageKey, onEnded, coverText = 'Dale 
   const [playerReady, setPlayerReady] = useState(false)
   const [needStart, setNeedStart] = useState(false)
   const [autoTried, setAutoTried] = useState(false)
+  // Fallback: si el player no reporta preparación en unos segundos, ofrecer abrir en origen
+  const [loadTimedOut, setLoadTimedOut] = useState(false)
   const isYouTube = useMemo(() => /youtube\.com|youtu\.be/.test(String(src || '')), [src])
   const isVimeo = useMemo(() => /vimeo\.com/.test(String(src || '')), [src])
   const youtubeEmbedUrl = useMemo(() => {
@@ -40,9 +42,8 @@ export default function VideoOnce({ src, storageKey, onEnded, coverText = 'Dale 
         modestbranding: '1',
         rel: '0',
         playsinline: '1',
-        controls: '0',
-        disablekb: '1',
-        fs: '0',
+        controls: '1',
+        fs: '1',
         iv_load_policy: '3',
         enablejsapi: '1',
         origin
@@ -116,6 +117,14 @@ export default function VideoOnce({ src, storageKey, onEnded, coverText = 'Dale 
     window.addEventListener('message', onMsg)
     return () => window.removeEventListener('message', onMsg)
   }, [isYouTube, isVimeo])
+
+  // Temporizador para mostrar botón de abrir en origen si el player tarda
+  useEffect(() => {
+    if (!isYouTube && !isVimeo) return
+    setLoadTimedOut(false)
+    const id = setTimeout(() => setLoadTimedOut(true), 5000)
+    return () => clearTimeout(id)
+  }, [src, isYouTube, isVimeo])
 
   const attemptStart = () => {
     try {
@@ -217,6 +226,12 @@ export default function VideoOnce({ src, storageKey, onEnded, coverText = 'Dale 
             onContextMenu={(e)=> e.preventDefault()}
             aria-hidden="true"
           />
+          {/* Fallback visible para abrir en origen si el player tarda o aparece verificación */}
+          {(!playerReady && loadTimedOut) && (
+            <div className="absolute bottom-2 right-2">
+              <a href={src} target="_blank" rel="noreferrer" className="btn btn-outline btn-sm">Abrir en {isYouTube ? 'YouTube' : 'Vimeo'}</a>
+            </div>
+          )}
         </div>
         <div className="flex justify-end mt-2">
           <button className="btn btn-outline btn-sm" onClick={markPlayed}>Marcar como visto</button>
