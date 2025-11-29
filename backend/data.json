@@ -1,0 +1,286 @@
+{
+  "users": [
+    {
+      "id": "402afc24-4172-4587-9ec4-c7a2a9461c3e",
+      "name": "Pedro",
+      "email": "pedro@example.com",
+      "phone": "555",
+      "passwordHash": "$2b$10$lmz7H86aXbfM71s0dcp5p.V8OgkRjbwrhCG9oVEKadkPc9MpUGrv6",
+      "plan": 37,
+      "sponsorId": null,
+      "active": false,
+      "whatsappNumber": "",
+      "landingVideoUrl": "",
+      "landingHeadline": ""
+    },
+    {
+      "id": "a7fd3fd6-afe0-43d2-ae61-1cd2f3e6fad8",
+      "name": "moisesromero",
+      "email": "programacionwebfacil@gmail.com",
+      "phone": "584241278885",
+      "passwordHash": "$2b$10$T0i5BCwyKfcPRiZrv9cZO.3WGFJpsRdWDl6Xtla81Akdm5MzdzxpC",
+      "plan": 37,
+      "sponsorId": null,
+      "active": false,
+      "whatsappNumber": "",
+      "landingVideoUrl": "",
+      "landingHeadline": ""
+    },
+    {
+      "id": "bab9a570-b6d7-42f8-b6c4-2010237fc3f2",
+      "name": "Admin",
+      "email": "admin@pliqo.local",
+      "phone": "",
+      "passwordHash": "$2b$10$hodGXNM7MeigUseaf7HquOB5w87JKNqAdE1Srs6cV1cp2weJFZEt6",
+      "plan": 987,
+      "sponsorId": null,
+      "active": true,
+      "role": "admin",
+      "whatsappNumber": "584241278885",
+      "landingVideoUrl": "",
+      "landingHeadline": ""
+    },
+    {
+      "id": "50d42022-efa0-4f07-a640-f17bdc69d180",
+      "name": "Tester",
+      "email": "tester@example.com",
+      "phone": "123456",
+      "passwordHash": "$2b$10$wDwxYCDwhx.PVkwaRQfzVelseayz8Sd7z/FBVgKjRDwqr2zqpvuSG",
+      "plan": 99,
+      "sponsorId": null,
+      "active": false,
+      "role": "user",
+      "whatsappNumber": "",
+      "landingVideoUrl": "",
+      "landingHeadline": ""
+    },
+    {
+      "id": "baf3dd35-6c01-49e0-b81a-1de33ad2f727",
+      "name": "juan",
+      "email": "juanrivero34@gmail.com",
+      "phone": "584263217534",
+      "passwordHash": "$2b$10$60eoSmPMkJCHQCtg7dU75eV.B303/69GXthUqSxcxkE6HQgH7ARTK",
+      "plan": 15,
+      "sponsorId": null,
+      "active": false,
+      "role": "user",
+      "level": 1,
+      "whatsappNumber": "",
+      "landingVideoUrl": "",
+      "landingHeadline": ""
+    },
+    {
+      "id": "61f484e6-3d73-4fd3-97ea-0a7b6730b4b8",
+      "name": "jorge",
+      "email": "jorgemoises@gmail.com",
+      "phone": "584263217533",
+      "passwordHash": "$2b$10$LVLQ8DFroz8T1KTjxibSneDMwGjXYY6yUCVUZLYY6yhrxoymPyu2C",
+      "plan": 15,
+      "sponsorId": null,
+      "active": false,
+      "role": "user",
+      "level": 1,
+      "whatsappNumber": "",
+      "landingVideoUrl": "",
+      "landingHeadline": ""
+    },
+    {
+      "id": "2750d2c0-d8f4-4799-b02e-e2e34dc76052",
+      "name": "jorge",
+      "email": "jorgemoises@gmail.com",
+      "phone": "584263217533",
+      "passwordHash": "$2b$10$ZGhEqvOAxUKEn2k/O78e4./c./FVwPRUru1vYM7O5X.WfhLvqUSfW",
+      "plan": 15,
+      "sponsorId": null,
+      "active": false,
+      "role": "user",
+      "level": 1,
+      "whatsappNumber": "",
+      "landingVideoUrl": "",
+      "landingHeadline": ""
+    },
+    {
+      "id": "eee7feed-cdfa-4547-adb1-2411a9e95e69",
+      "name": "ytrytryrytry",
+      "email": "carlos@gmail.com",
+      "phone": "584241278889",
+      "passwordHash": "$2b$10$W8e0UIw5HKogUOE/lisdh.H55Zi4VD0OKtkAW8uoAi2c2dhc7db7O",
+      "plan": 37,
+      "sponsorId": null,
+      "active": false,
+      "role": "user",
+      "level": 1,
+      "whatsappNumber": "",
+      "landingVideoUrl": "",
+      "landingHeadline": ""
+    },
+    {
+      "id": "166697bd-46d2-4233-8863-aff63b05b062",
+      "name": "jose",
+      "email": "jose@gmail.com",
+      "phone": "584241278889",
+      "passwordHash": "$2b$10$qiiMBMbU.F231.omEyLzNeqyhoqdjC7vZNqdzJbog7R3pps82d.dq",
+      "plan": 15,
+      "sponsorId": null,
+      "active": false,
+      "role": "user",
+      "level": 1,
+      "whatsappNumber": "",
+      "landingVideoUrl": "",
+      "landingHeadline": ""
+    },
+    {
+      "id": "ed7a7433-8cd3-408d-b9a6-a7b5c9b72912",
+      "name": "Tester",
+      "email": "tester55469@example.com",
+      "phone": "123456",
+      "passwordHash": "$2b$10$zDwokNG5kpzBxsAmheCuCeSwSM2Ya1ATKA0IzQK9nfTiv3Ec0fIu6",
+      "plan": 987,
+      "sponsorId": "bab9a570-b6d7-42f8-b6c4-2010237fc3f2",
+      "active": false,
+      "role": "user",
+      "level": 1,
+      "whatsappNumber": "",
+      "landingVideoUrl": "",
+      "landingHeadline": ""
+    },
+    {
+      "id": "66f64a67-475a-4d96-862e-bf7d96520cac",
+      "name": "Tester",
+      "email": "tester74661@example.com",
+      "phone": "123456",
+      "passwordHash": "$2b$10$JuA.yooZcSUcrazs0lTNeu6TgSMO57MGgbwKez0hhMAVsjkgNok8C",
+      "plan": 987,
+      "sponsorId": "bab9a570-b6d7-42f8-b6c4-2010237fc3f2",
+      "active": false,
+      "role": "user",
+      "level": 1,
+      "whatsappNumber": "",
+      "landingVideoUrl": "",
+      "landingHeadline": ""
+    },
+    {
+      "id": "e71d9614-929e-4976-af4a-0379038032a8",
+      "name": "Tester Preview",
+      "email": "tester_preview@example.com",
+      "phone": "123456",
+      "passwordHash": "$2b$10$k7yA0rHTEOuwEx6I0VW/BOVtUWBFmf5ZDsUd5nbWd37pYSIHxJPlC",
+      "plan": 987,
+      "sponsorId": "bab9a570-b6d7-42f8-b6c4-2010237fc3f2",
+      "active": false,
+      "role": "user",
+      "level": 1,
+      "whatsappNumber": "",
+      "landingVideoUrl": "",
+      "landingHeadline": ""
+    },
+    {
+      "id": "41c0e6be-051f-4702-8a8f-f5fefa4e5093",
+      "name": "josericardo",
+      "email": "josericardo436@gmail.com",
+      "phone": "584241268895",
+      "passwordHash": "$2b$10$jeGnJUBHXcbWji.2VHxwR.dLR25oXfkdwPq2tyj2eIMz1gSJRRrqC",
+      "plan": 987,
+      "sponsorId": "bab9a570-b6d7-42f8-b6c4-2010237fc3f2",
+      "active": false,
+      "role": "user",
+      "level": 1,
+      "whatsappNumber": "",
+      "landingVideoUrl": "",
+      "landingHeadline": ""
+    }
+  ],
+  "sales": [],
+  "paymentSettings": [
+    {
+      "id": "e3f1ee64-362b-4b7c-9791-1c1a0158feaf",
+      "userId": "bab9a570-b6d7-42f8-b6c4-2010237fc3f2",
+      "paypalEmail": "juandemo@gmail.com",
+      "binanceId": "",
+      "westernUnionName": "moises romero",
+      "bankTransferDetails": ""
+    }
+  ],
+  "bets": [
+    {
+      "id": "1cc0cc41-38aa-4410-98db-e729a462be5a",
+      "amount": 10,
+      "creatorId": "50d42022-efa0-4f07-a640-f17bdc69d180",
+      "opponentId": "bab9a570-b6d7-42f8-b6c4-2010237fc3f2",
+      "status": "pending",
+      "deposits": {
+        "50d42022-efa0-4f07-a640-f17bdc69d180": false,
+        "bab9a570-b6d7-42f8-b6c4-2010237fc3f2": false
+      },
+      "winnerId": null,
+      "payoutDelivered": false,
+      "createdAt": "2025-11-28T13:47:06.362Z",
+      "serverSeed": "248e1446-fd14-44df-be91-1eb65467ac1e"
+    }
+  ],
+  "referralEvents": [
+    {
+      "id": "be7db0ae-6c61-4220-9483-c110e2f79a0f",
+      "type": "visit",
+      "sponsorId": "50d42022-efa0-4f07-a640-f17bdc69d180",
+      "createdAt": "2025-11-28T14:11:31.187Z"
+    },
+    {
+      "id": "ff16e4c8-4337-44d5-a534-6a5bcf364bd0",
+      "type": "video_view",
+      "sponsorId": "50d42022-efa0-4f07-a640-f17bdc69d180",
+      "createdAt": "2025-11-28T14:11:31.418Z"
+    },
+    {
+      "id": "d8d8e8ec-601d-4ca1-a981-e34126362765",
+      "type": "visit",
+      "sponsorId": "bab9a570-b6d7-42f8-b6c4-2010237fc3f2",
+      "createdAt": "2025-11-28T16:34:31.354Z"
+    },
+    {
+      "id": "0e525e50-7473-423e-a6a2-cdfd97abcb13",
+      "type": "visit",
+      "sponsorId": "bab9a570-b6d7-42f8-b6c4-2010237fc3f2",
+      "createdAt": "2025-11-28T21:58:41.186Z"
+    },
+    {
+      "id": "d5894595-4438-40ef-9852-ee290c364e83",
+      "type": "visit",
+      "sponsorId": "bab9a570-b6d7-42f8-b6c4-2010237fc3f2",
+      "createdAt": "2025-11-28T22:36:31.859Z"
+    },
+    {
+      "id": "9f55cc3d-3640-46b7-acc8-bc726731c5fe",
+      "type": "visit",
+      "sponsorId": "bab9a570-b6d7-42f8-b6c4-2010237fc3f2",
+      "createdAt": "2025-11-29T00:22:12.966Z"
+    }
+  ],
+  "activationRequests": [
+    {
+      "id": "b6bdbdcd-a4d5-42a3-8280-d6a73554c72d",
+      "userId": "e71d9614-929e-4976-af4a-0379038032a8",
+      "sponsorId": "bab9a570-b6d7-42f8-b6c4-2010237fc3f2",
+      "createdAt": "2025-11-29T00:17:26.249Z"
+    }
+  ],
+  "levels": [
+    {
+      "id": 1,
+      "name": "Nivel 1",
+      "description": "Inicio"
+    },
+    {
+      "id": 2,
+      "name": "Nivel 2",
+      "description": "Intermedio"
+    },
+    {
+      "id": 3,
+      "name": "Nivel 3",
+      "description": "Avanzado"
+    }
+  ],
+  "tradingKeys": [],
+  "botLogs": []
+}

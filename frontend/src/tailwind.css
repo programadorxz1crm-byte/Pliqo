@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body, #root { height: 100%; }
+body { @apply bg-gray-50 text-gray-900; }
+
+.btn {
+  @apply inline-flex items-center justify-center rounded-lg px-4 py-2 font-medium transition-colors;
+}
+.btn-primary { @apply bg-brand-600 text-white hover:bg-brand-700; }
+.btn-outline { @apply border border-gray-300 hover:bg-gray-100; }
+
+.input {
+  @apply w-full rounded-lg border border-gray-300 bg-white px-3 py-2 outline-none focus:ring-2 focus:ring-brand-500;
+}

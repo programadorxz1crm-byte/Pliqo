@@ -1,0 +1,16 @@
+# Root ignores
+.DS_Store
+Thumbs.db
+
+# Node / build artifacts
+frontend/node_modules/
+frontend/dist/
+backend/node_modules/
+backend/dist/
+
+# Environment files
+backend/.env
+
+# Logs
+**/*.log
+backend/prisma/dev.db

@@ -1,0 +1,45 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id               String   @id @default(cuid())
+  name             String
+  email            String   @unique
+  phone            String?
+  passwordHash     String
+  plan             Int
+  active           Boolean  @default(false)
+  sponsorId        String?
+  sponsor          User?    @relation("UserSponsor", fields: [sponsorId], references: [id])
+  referrals        User[]   @relation("UserSponsor")
+  whatsappNumber   String?
+  landingVideoUrl  String?
+  landingHeadline  String?
+  payment          PaymentSetting?
+  sales            Sale[]
+  createdAt        DateTime @default(now())
+}
+
+model PaymentSetting {
+  id                  String @id @default(cuid())
+  userId              String @unique
+  user                User   @relation(fields: [userId], references: [id])
+  paypalEmail         String?
+  binanceId           String?
+  westernUnionName    String?
+  bankTransferDetails String?
+}
+
+model Sale {
+  id       String   @id @default(cuid())
+  userId   String
+  user     User     @relation(fields: [userId], references: [id])
+  amount   Int
+  buyerId  String?
+  createdAt DateTime @default(now())
+}
