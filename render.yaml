@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: pliqo-backend
+    env: node
+    plan: free
+    region: oregon
+    branch: main
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_VERSION
+        value: 18
+      - key: DATA_DIR
+        value: /data
+      - key: JWT_SECRET
+        generateValue: true
+      - key: TRADING_KEYS_SECRET
+        generateValue: true
+      - key: ADMIN_EMAIL
+        value: admin@pliqo.local
+    disk:
+      name: pliqo-data
+      mountPath: /data
+      sizeGB: 1

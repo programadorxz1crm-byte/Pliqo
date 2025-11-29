@@ -2,7 +2,9 @@ import { Low } from 'lowdb'
 import { JSONFile } from 'lowdb/node'
 import { join } from 'node:path'
 
-const file = join(process.cwd(), 'data.json')
+// Permite configurar el directorio de datos vía variable de entorno (Render: /data)
+const dataDir = process.env.DATA_DIR || process.cwd()
+const file = join(dataDir, 'data.json')
 const adapter = new JSONFile(file)
 const db = new Low(adapter, { users: [], sales: [], paymentSettings: [], bets: [] })
 await db.read()
