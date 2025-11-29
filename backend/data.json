@@ -37,7 +37,7 @@
       "active": true,
       "role": "admin",
       "whatsappNumber": "584241278885",
-      "landingVideoUrl": "",
+      "landingVideoUrl": "https://youtu.be/uneMyYbQ-84?si=ciXadnqVU-9fbm3X",
       "landingHeadline": ""
     },
     {
@@ -195,10 +195,12 @@
     {
       "id": "e3f1ee64-362b-4b7c-9791-1c1a0158feaf",
       "userId": "bab9a570-b6d7-42f8-b6c4-2010237fc3f2",
-      "paypalEmail": "juandemo@gmail.com",
+      "paypalEmail": "tomasamayo@gmail.com",
       "binanceId": "",
-      "westernUnionName": "moises romero",
-      "bankTransferDetails": ""
+      "westernUnionName": "Moises Gregorio Di gabriel romero rada venezuela cedula 28102494",
+      "bankTransferDetails": "",
+      "currencyCode": "USD",
+      "binancePayLink": ""
     }
   ],
   "bets": [

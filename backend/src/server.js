@@ -223,6 +223,42 @@ app.get('/user/:id/public', async (req, res) => {
   res.json({ id: user.id, name: user.name, plan: user.plan, level: user.level || 1, whatsappNumber: user.whatsappNumber, landingVideoUrl: user.landingVideoUrl, landingHeadline: user.landingHeadline, avatarUrl: user.avatarUrl || '' })
 })
 
+// Public admin configuration for landing (video, headline, WhatsApp)
+app.get('/public/admin', async (_req, res) => {
+  await db.read()
+  ensureDbDefaults()
+  const admin = db.data.users.find(u => (u.role || 'user') === 'admin')
+  if (!admin) return res.status(404).json({ error: 'Admin no encontrado' })
+  res.json({
+    id: admin.id,
+    name: admin.name,
+    plan: admin.plan,
+    whatsappNumber: admin.whatsappNumber,
+    landingVideoUrl: admin.landingVideoUrl,
+    landingHeadline: admin.landingHeadline,
+    avatarUrl: admin.avatarUrl || ''
+  })
+})
+
+// Public payment info for a sponsor (limited fields)
+app.get('/user/:id/payment/public', async (req, res) => {
+  await db.read()
+  ensureDbDefaults()
+  const payment = db.data.paymentSettings.find(p => p.userId === req.params.id) || null
+  if (!payment) return res.json({ paypalEmail: '', binanceId: '', westernUnionName: '', bankTransferDetails: '', currencyCode: 'USD', binancePayLink: '' })
+  const { paypalEmail = '', binanceId = '', westernUnionName = '', bankTransferDetails = '', currencyCode = 'USD', binancePayLink = '' } = payment
+  res.json({ paypalEmail, binanceId, westernUnionName, bankTransferDetails, currencyCode, binancePayLink })
+})
+
+// Public admin config for landing (video/headline/whatsapp)
+app.get('/public/admin', async (_req, res) => {
+  await db.read()
+  ensureDbDefaults()
+  const admin = db.data.users.find(u => (u.role || 'user') === 'admin')
+  if (!admin) return res.status(404).json({ error: 'Admin no encontrado' })
+  res.json({ id: admin.id, name: admin.name, whatsappNumber: admin.whatsappNumber, landingVideoUrl: admin.landingVideoUrl, landingHeadline: admin.landingHeadline, avatarUrl: admin.avatarUrl || '' })
+})
+
 // ===== Levels =====
 app.get('/levels', authMiddleware, async (_req, res) => {
   await db.read()

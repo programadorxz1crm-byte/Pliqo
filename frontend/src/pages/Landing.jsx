@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import VideoOnce from '../components/VideoOnce.jsx'
-import Hero3D from '../components/Hero3D.jsx'
+import PaymentButtons from '../components/PaymentButtons.jsx'
 import { api } from '../api.js'
 
 const PLANS = [
@@ -20,7 +20,10 @@ export default function Landing() {
   const whatsappParam = params.get('wa')
   const [geo, setGeo] = useState({ city: 'tu ciudad', country: '', ip: '' })
   const [sponsor, setSponsor] = useState({ name: 'Patrocinador', whatsappNumber: whatsappParam || '' })
-  const [videoUrl, setVideoUrl] = useState('https://cdn.coverr.co/videos/coverr-people-are-walking-in-the-city-1080-5983.mp4')
+  const fallbackEnvVideo = import.meta.env.VITE_LANDING_VIDEO_URL || ''
+  const [videoUrl, setVideoUrl] = useState(fallbackEnvVideo || 'https://cdn.coverr.co/videos/coverr-people-are-walking-in-the-city-1080-5983.mp4')
+  const [headline, setHeadline] = useState('')
+  const [payment, setPayment] = useState(null)
   // Chat de comunidad (simulado)
   const [chatFeed, setChatFeed] = useState([])
   const [chatInput, setChatInput] = useState('')
@@ -256,13 +259,30 @@ export default function Landing() {
       api(`/user/${ref}/public`).then(d => {
         setSponsor({ name: d.name || 'Patrocinador', whatsappNumber: d.whatsappNumber || whatsappParam || '' })
         if (d.landingVideoUrl) setVideoUrl(d.landingVideoUrl)
+        if (d.landingHeadline) setHeadline(d.landingHeadline)
       }).catch(() => {})
+      // Cargar métodos de pago públicos del patrocinador
+      api(`/user/${ref}/payment/public`).then(p => setPayment(p)).catch(()=>{})
       // Registrar visita única por navegador
       const already = localStorage.getItem(visitKey) === '1'
       if (!already) {
         api('/referral/visit', { method: 'POST', body: { sponsorId: ref } }).catch(()=>{})
         localStorage.setItem(visitKey, '1')
       }
+    }
+  }, [ref, whatsappParam])
+
+  // Cargar configuración global del admin cuando no hay ref en la URL
+  useEffect(() => {
+    if (!ref) {
+      api('/public/admin').then(d => {
+        setSponsor({ name: d.name || 'Patrocinador', whatsappNumber: d.whatsappNumber || whatsappParam || '' })
+        if (d.landingVideoUrl) setVideoUrl(d.landingVideoUrl)
+        if (d.landingHeadline) setHeadline(d.landingHeadline)
+      }).catch(() => {
+        // Si no hay backend accesible en producción, usar el video de entorno si existe
+        if (fallbackEnvVideo) setVideoUrl(fallbackEnvVideo)
+      })
     }
   }, [ref, whatsappParam])
 
@@ -273,12 +293,39 @@ export default function Landing() {
     window.open(`https://wa.me/${number}?text=${text}`, '_blank')
   }
 
+  // Aviso postpago para subir comprobante y avisar por WhatsApp
+  const [paymentConfirmVisible, setPaymentConfirmVisible] = useState(false)
+
+  const openPayPalForPlan = (amount) => {
+    if (!payment?.paypalEmail) return alert('Este patrocinador no configuró PayPal')
+    const currency = (payment?.currencyCode || 'USD').toUpperCase()
+    const business = encodeURIComponent(String(payment.paypalEmail).trim())
+    const itemName = encodeURIComponent(`Activación Pliqo — Plan ${amount} ${currency}`)
+    const url = `https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=${business}&item_name=${itemName}&amount=${amount}&currency_code=${currency}`
+    window.open(url, '_blank')
+    setPaymentConfirmVisible(true)
+  }
+
+  const openBinancePayDirect = () => {
+    const link = payment?.binancePayLink
+    if (link) {
+      window.open(link, '_blank')
+    } else {
+      window.open('https://pay.binance.com/en', '_blank')
+      const id = payment?.binanceId
+      if (id) {
+        try { navigator.clipboard.writeText(String(id)) } catch {}
+      }
+    }
+    setPaymentConfirmVisible(true)
+  }
+
   return (
     <div className="space-y-8 text-white">
       <section className="grid lg:grid-cols-2 gap-8 items-start">
         <div className="space-y-4">
           <h1 className="text-3xl sm:text-4xl font-bold">
-            Recibe 100% por activación confirmada según tu plan
+            {headline || 'Recibe 100% por activación confirmada según tu plan'}
           </h1>
           
           <div className="flex gap-3">
@@ -293,8 +340,13 @@ export default function Landing() {
             {sponsor.whatsappNumber && <span>· WhatsApp: {sponsor.whatsappNumber}</span>}
           </div>
         </div>
-        <div className="relative rounded-2xl border border-white/20 bg-white/5 backdrop-blur-md shadow-xl overflow-hidden">
-          <Hero3D className="w-full" />
+        <div className="relative rounded-2xl border border-white/20 bg-black/60 backdrop-blur-md shadow-xl overflow-hidden">
+          <VideoOnce
+            src={videoUrl}
+            storageKey={storageKey}
+            coverText={headline || 'Dale click al video — esta oportunidad en unas horas desaparecerá'}
+            onEnded={() => { if (ref) api('/referral/video', { method: 'POST', body: { sponsorId: ref } }).catch(()=>{}) }}
+          />
         </div>
       </section>
 
@@ -303,7 +355,7 @@ export default function Landing() {
         <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-4">
           {PLANS.map(p => (
             <div key={p.id} className="rounded-xl border border-white/20 bg-black/50 p-4 shadow-sm">
-              <div className="text-lg font-bold text-white">${p.amount}</div>
+              <div className="text-lg font-bold text-white">${p.amount} <span className="text-xs text-gray-300">{payment?.currencyCode || 'USD'}</span></div>
               <p className="text-sm text-gray-300">Recibes ${p.amount} por activación confirmada.</p>
               <button
                 className="btn btn-primary w-full mt-3"
@@ -311,17 +363,39 @@ export default function Landing() {
               >
                 Elegir plan
               </button>
+              {payment?.paypalEmail && (
+                <button
+                  className="btn btn-outline w-full mt-2"
+                  onClick={() => openPayPalForPlan(p.amount)}
+                >
+                  Pagar con tarjeta ({payment?.currencyCode || 'USD'})
+                </button>
+              )}
+              {(payment?.binancePayLink || payment?.binanceId) && (
+                <button
+                  className="btn btn-outline w-full mt-2"
+                  onClick={openBinancePayDirect}
+                >
+                  Pagar por Binance
+                </button>
+              )}
             </div>
           ))}
         </div>
+        {paymentConfirmVisible && (
+          <div className="mt-4 rounded-xl border border-white/20 bg-black/60 p-4 shadow-sm">
+            <div className="font-semibold text-white">Sube tu comprobante</div>
+            <p className="text-sm text-gray-300 mt-1">Una vez realizado el pago, sube tu comprobante en tu dashboard y avisa por WhatsApp a tu patrocinador para activar tu cuenta.</p>
+            <div className="mt-3 flex flex-wrap gap-2">
+              <button className="btn btn-primary" onClick={openWhatsApp}>Avisar por WhatsApp</button>
+              <button className="btn btn-outline" onClick={() => navigate('/login')}>Ir al login</button>
+              <button className="btn btn-outline" onClick={() => setPaymentConfirmVisible(false)}>Cerrar</button>
+            </div>
+          </div>
+        )}
       </section>
 
-      <section className="space-y-4">
-        <h2 className="text-2xl font-semibold">Video explicación (reproducción única)</h2>
-        <div className="rounded-2xl border border-white/20 bg-black/60 shadow-sm">
-          <VideoOnce src={videoUrl} storageKey={storageKey} onEnded={() => { if (ref) api('/referral/video', { method: 'POST', body: { sponsorId: ref } }).catch(()=>{}) }} />
-        </div>
-      </section>
+      {/* Video se muestra arriba con portada clicable */}
 
       <section className="space-y-4">
         <h2 className="text-2xl font-semibold">Testimonios</h2>

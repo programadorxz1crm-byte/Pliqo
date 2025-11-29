@@ -65,6 +65,8 @@ function Settings({ user, onUserChange }) {
   const [avatarPreview, setAvatarPreview] = useState(user?.avatarUrl || '')
   const [paypalEmail, setPaypalEmail] = useState(user?.payment?.paypalEmail || '')
   const [binanceId, setBinanceId] = useState(user?.payment?.binanceId || '')
+  const [currencyCode, setCurrencyCode] = useState(user?.payment?.currencyCode || 'USD')
+  const [binancePayLink, setBinancePayLink] = useState(user?.payment?.binancePayLink || '')
   const [westernUnionName, setWesternUnionName] = useState(user?.payment?.westernUnionName || '')
   const [bankTransferDetails, setBankTransferDetails] = useState(user?.payment?.bankTransferDetails || '')
   const [whatsappNumber, setWhatsappNumber] = useState(user?.whatsappNumber || '')
@@ -88,7 +90,7 @@ function Settings({ user, onUserChange }) {
     const data = await api('/settings', {
       method: 'POST', token,
       body: {
-        payment: { paypalEmail, binanceId, westernUnionName, bankTransferDetails },
+        payment: { paypalEmail, binanceId, currencyCode, binancePayLink, westernUnionName, bankTransferDetails },
         whatsappNumber, landingVideoUrl, landingHeadline,
       }
     })
@@ -215,6 +217,25 @@ function Settings({ user, onUserChange }) {
             <label className="block text-sm font-medium text-white">Binance ID</label>
             <p className="text-xs text-gray-300 mb-1">Tu identificador de Binance Pay o usuario.</p>
             <input className="input" placeholder="ej. 123456789" value={binanceId} onChange={e=>setBinanceId(e.target.value)} />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-white">Moneda preferida</label>
+            <p className="text-xs text-gray-300 mb-1">Se usará para los pagos con tarjeta (PayPal).</p>
+            <select className="input" value={currencyCode} onChange={e=>setCurrencyCode(e.target.value)}>
+              <option value="USD">USD</option>
+              <option value="EUR">EUR</option>
+              <option value="MXN">MXN</option>
+              <option value="BRL">BRL</option>
+              <option value="COP">COP</option>
+              <option value="PEN">PEN</option>
+              <option value="CLP">CLP</option>
+              <option value="ARS">ARS</option>
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-white">Enlace/QR de Binance Pay</label>
+            <p className="text-xs text-gray-300 mb-1">Pega el enlace del cobro/QR para abrir pago directo.</p>
+            <input className="input" placeholder="https://pay.binance.com/checkout/..." value={binancePayLink} onChange={e=>setBinancePayLink(e.target.value)} />
           </div>
           <div>
             <label className="block text-sm font-medium text-white">Western Union (nombre)</label>
