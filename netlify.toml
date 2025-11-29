@@ -1,0 +1,14 @@
+[build]
+# Ejecuta el build del frontend (Vite)
+command = "npm run build"
+publish = "dist"
+base = "frontend"
+
+[build.environment]
+NODE_VERSION = "18"
+
+# Redirección para SPA: todas las rutas sirven index.html
+[[redirects]]
+from = "/*"
+to = "/index.html"
+status = 200
