@@ -18,8 +18,9 @@ export default function Landing() {
   const navigate = useNavigate()
   const ref = params.get('ref')
   const whatsappParam = params.get('wa')
+  const sponsorNameParam = params.get('sn')
   const [geo, setGeo] = useState({ city: 'tu ciudad', country: '', ip: '' })
-  const [sponsor, setSponsor] = useState({ name: 'Patrocinador', whatsappNumber: whatsappParam || '' })
+  const [sponsor, setSponsor] = useState({ name: sponsorNameParam || 'Patrocinador', whatsappNumber: whatsappParam || '' })
   const fallbackEnvVideo = import.meta.env.VITE_LANDING_VIDEO_URL || ''
   const [videoUrl, setVideoUrl] = useState(fallbackEnvVideo || 'https://cdn.coverr.co/videos/coverr-people-are-walking-in-the-city-1080-5983.mp4')
   const [headline, setHeadline] = useState('')
@@ -257,10 +258,13 @@ export default function Landing() {
       // Persist sponsorId locally to survive navigation flows where the ref param is lost
       try { localStorage.setItem('ref_sponsor', ref) } catch {}
       api(`/user/${ref}/public`).then(d => {
-        setSponsor({ name: d.name || 'Patrocinador', whatsappNumber: d.whatsappNumber || whatsappParam || '' })
+        setSponsor({ name: d.name || sponsorNameParam || 'Patrocinador', whatsappNumber: d.whatsappNumber || whatsappParam || '' })
         if (d.landingVideoUrl) setVideoUrl(d.landingVideoUrl)
         if (d.landingHeadline) setHeadline(d.landingHeadline)
-      }).catch(() => {})
+      }).catch(() => {
+        // Fallback: si la API falla, usa datos de la URL
+        setSponsor(s => ({ name: s.name || sponsorNameParam || 'Patrocinador', whatsappNumber: s.whatsappNumber || whatsappParam || '' }))
+      })
       // Cargar métodos de pago públicos del patrocinador
       api(`/user/${ref}/payment/public`).then(p => setPayment(p)).catch(()=>{})
       // Registrar visita única por navegador
@@ -270,13 +274,13 @@ export default function Landing() {
         localStorage.setItem(visitKey, '1')
       }
     }
-  }, [ref, whatsappParam])
+  }, [ref, whatsappParam, sponsorNameParam])
 
   // Cargar configuración global del admin cuando no hay ref en la URL
   useEffect(() => {
     if (!ref) {
       api('/public/admin').then(d => {
-        setSponsor({ name: d.name || 'Patrocinador', whatsappNumber: d.whatsappNumber || whatsappParam || '' })
+        setSponsor({ name: d.name || sponsorNameParam || 'Patrocinador', whatsappNumber: d.whatsappNumber || whatsappParam || '' })
         if (d.landingVideoUrl) setVideoUrl(d.landingVideoUrl)
         if (d.landingHeadline) setHeadline(d.landingHeadline)
       }).catch(() => {
@@ -284,7 +288,7 @@ export default function Landing() {
         if (fallbackEnvVideo) setVideoUrl(fallbackEnvVideo)
       })
     }
-  }, [ref, whatsappParam])
+  }, [ref, whatsappParam, sponsorNameParam])
 
   const openWhatsApp = () => {
     const number = sponsor.whatsappNumber?.replace(/[^\d+]/g, '')

@@ -308,7 +308,10 @@ function Settings({ user, onUserChange }) {
 }
 
 function Referral({ user }) {
-  const url = `${window.location.origin}/?ref=${user.id}`
+  const base = `${window.location.origin}/?ref=${user.id}`
+  const wa = user?.whatsappNumber ? `&wa=${encodeURIComponent(user.whatsappNumber)}` : ''
+  const sn = user?.name ? `&sn=${encodeURIComponent(user.name)}` : ''
+  const url = `${base}${wa}${sn}`
   const token = localStorage.getItem('token')
   const [stats, setStats] = useState({ visits: 0, registrations: 0, videoViews: 0 })
   const [referrals, setReferrals] = useState([])
@@ -553,7 +556,10 @@ function Chat({ user }) {
     setSelectedPlan(p)
     setInput(`Quiero vender el plan $${p}. Dame estrategias para Facebook, Instagram y TikTok (contenido, frecuencia, hashtags y CTA), guiones para DM/WhatsApp y objeciones, e indica cómo compartir mi enlace de referidos y construir marca con foto y testimonios.`)
   }
-  const referralLink = `${window.location.origin}/?ref=${user.id}`
+  const baseLink = `${window.location.origin}/?ref=${user.id}`
+  const waLink = user?.whatsappNumber ? `&wa=${encodeURIComponent(user.whatsappNumber)}` : ''
+  const snLink = user?.name ? `&sn=${encodeURIComponent(user.name)}` : ''
+  const referralLink = `${baseLink}${waLink}${snLink}`
   const payment = user?.payment || {}
   const paymentLines = [
     payment.paypalEmail ? `• PayPal: ${payment.paypalEmail}` : '',
