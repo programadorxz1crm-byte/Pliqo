@@ -17,8 +17,12 @@ const FALLBACK_ENDPOINTS = (() => {
   if (!list.includes('/api')) list.push('/api')
   const renderUrl = 'https://pliqo-backend.onrender.com'
   if (!list.includes(renderUrl)) list.push(renderUrl)
-  const localUrl = 'http://localhost:4000'
-  if (!list.includes(localUrl)) list.push(localUrl)
+  // Evitar intentar localhost en producción (Netlify/Render)
+  const isProd = typeof window !== 'undefined' && /netlify\.app|onrender\.com/i.test(window.location.hostname)
+  if (!isProd) {
+    const localUrl = 'http://localhost:4000'
+    if (!list.includes(localUrl)) list.push(localUrl)
+  }
   return list
 })()
 
