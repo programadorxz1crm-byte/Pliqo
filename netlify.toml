@@ -9,6 +9,13 @@ NODE_VERSION = "18"
 # Usar proxy interno /api en Netlify para evitar CORS
 VITE_API_URL = "/api"
 
+# Asegurar que Deploy Previews y Branch Deploys también usen /api
+[context.deploy-preview.environment]
+VITE_API_URL = "/api"
+
+[context.branch-deploy.environment]
+VITE_API_URL = "/api"
+
 # Proxy de API hacia Render (debe estar antes del catch-all)
 [[redirects]]
 from = "/api/*"
