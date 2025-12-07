@@ -6,6 +6,7 @@ base = "frontend"
 
 [build.environment]
 NODE_VERSION = "18"
+VITE_API_URL = "https://pliqo-backend.onrender.com"
 
 # Redirección para SPA: todas las rutas sirven index.html
 [[redirects]]
