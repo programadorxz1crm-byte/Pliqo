@@ -6,7 +6,15 @@ base = "frontend"
 
 [build.environment]
 NODE_VERSION = "18"
-VITE_API_URL = "https://pliqo-backend.onrender.com"
+# Usar proxy interno /api en Netlify para evitar CORS
+VITE_API_URL = "/api"
+
+# Proxy de API hacia Render (debe estar antes del catch-all)
+[[redirects]]
+from = "/api/*"
+to = "https://pliqo-backend.onrender.com/:splat"
+status = 200
+force = true
 
 # Redirección para SPA: todas las rutas sirven index.html
 [[redirects]]

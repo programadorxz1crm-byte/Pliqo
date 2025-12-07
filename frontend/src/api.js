@@ -1,4 +1,15 @@
-export const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
+// Detectar entorno automáticamente: en Netlify usar proxy /api, local usar localhost
+const inferredApiUrl = (() => {
+  const envUrl = import.meta.env.VITE_API_URL
+  if (envUrl) return envUrl
+  if (typeof window !== 'undefined') {
+    const host = window.location.hostname || ''
+    if (host.includes('netlify.app')) return '/api'
+  }
+  return 'http://localhost:4000'
+})()
+
+export const API_URL = inferredApiUrl;
 
 export async function api(path, { method = 'GET', body, token } = {}) {
   const headers = { 'Content-Type': 'application/json' };
