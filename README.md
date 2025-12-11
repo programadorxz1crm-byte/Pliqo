@@ -39,8 +39,12 @@ Este proyecto incluye un workflow para instalar y configurar automáticamente el
 ### Secretos requeridos
 - `SSH_HOST`: IP o hostname del servidor (p. ej. `51.222.12.132`).
 - `SSH_USER`: Usuario del servidor (p. ej. `ubuntu`).
-- `SSH_PASSWORD`: Contraseña del usuario SSH.
 - `SSH_PORT`: Puerto SSH (por defecto `22`).
+- Autenticación recomendada (llave):
+  - `SSH_KEY`: contenido de tu llave privada (ED25519) pem, copiado tal cual.
+  - `SSH_KEY_PASSPHRASE`: passphrase si tu llave tiene.
+- Alternativa (solo si no usas llave):
+  - `SSH_PASSWORD`: contraseña del usuario SSH.
 
 Configúralos en GitHub → Settings → Secrets and variables → Actions → New repository secret.
 
@@ -51,6 +55,7 @@ Configúralos en GitHub → Settings → Secrets and variables → Actions → N
    - `backend_domain`: dominio del backend (p. ej. `botapi.gonzabot.lat`).
    - `certbot_email`: correo para certificados SSL de Let’s Encrypt.
 3. El workflow se conectará por SSH y ejecutará el instalador:
+   - Usa llave SSH si `SSH_KEY` está definido; si no, usa contraseña.
    - Instala Node 18, Nginx, Certbot, PM2.
    - Inicia backend en `127.0.0.1:4000` con PM2.
    - Construye frontend con `VITE_API_URL=https://<backend_domain>` y publica en Nginx.
@@ -63,6 +68,14 @@ Configúralos en GitHub → Settings → Secrets and variables → Actions → N
 ### Requisitos previos
 - DNS de `frontend_domain` y `backend_domain` apuntan al servidor.
 - Puertos `80/443` abiertos y Nginx activo.
+
+### Generar y configurar llave SSH
+- En tu máquina, crea una llave ED25519:
+  - `ssh-keygen -t ed25519 -C "admin@gmail.com" -f ~/.ssh/id_ed25519_pliqo`
+- Copia la pública al servidor (autoriza el acceso):
+  - `ssh-copy-id -i ~/.ssh/id_ed25519_pliqo.pub ubuntu@51.222.12.132`
+  - Si no tienes `ssh-copy-id`, añade el contenido de `id_ed25519_pliqo.pub` a `~/.ssh/authorized_keys` en el servidor.
+- En GitHub → Secrets, pega el contenido de `~/.ssh/id_ed25519_pliqo` en `SSH_KEY` (privada). Añade `SSH_KEY_PASSPHRASE` si la llave tiene passphrase.
 
 ### Solución de problemas
 - Logs backend: `pm2 logs pliqo-backend`.

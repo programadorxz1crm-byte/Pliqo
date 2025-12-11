@@ -23,7 +23,38 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install to remote Ubuntu via SSH
+      - name: Install via SSH using key (preferred)
+        if: ${{ secrets.SSH_KEY != '' }}
+        uses: appleboy/ssh-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          passphrase: ${{ secrets.SSH_KEY_PASSPHRASE }}
+          port: ${{ secrets.SSH_PORT }}
+          script_stop: true
+          timeout: 120s
+          command_timeout: 30m
+          script: |
+            set -e
+            echo "Connected to $HOSTNAME via SSH key"
+            sudo apt-get update -y
+            # Fetch installer script from repo
+            curl -fsSL https://raw.githubusercontent.com/programadorxz1crm-byte/Pliqo/main/deploy/install-ubuntu.sh -o install-ubuntu.sh
+            sudo bash install-ubuntu.sh --frontend=${{ github.event.inputs.frontend_domain }} --backend=${{ github.event.inputs.backend_domain }} --email=${{ github.event.inputs.certbot_email }}
+            # Health checks
+            echo "Checking backend health at https://${{ github.event.inputs.backend_domain }}/"
+            if ! curl -sSf https://${{ github.event.inputs.backend_domain }}/ > /dev/null ; then
+              echo "Backend health check failed"; exit 1;
+            fi
+            echo "Checking frontend site at https://${{ github.event.inputs.frontend_domain }}/"
+            if ! curl -sSfI https://${{ github.event.inputs.frontend_domain }}/ > /dev/null ; then
+              echo "Frontend site health check failed"; exit 1;
+            fi
+            echo "Deployment successful."
+
+      - name: Install via SSH using password (fallback)
+        if: ${{ secrets.SSH_KEY == '' }}
         uses: appleboy/ssh-action@v0.1.7
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -35,7 +66,7 @@ jobs:
           command_timeout: 30m
           script: |
             set -e
-            echo "Connected to $HOSTNAME"
+            echo "Connected to $HOSTNAME via password"
             sudo apt-get update -y
             # Fetch installer script from repo
             curl -fsSL https://raw.githubusercontent.com/programadorxz1crm-byte/Pliqo/main/deploy/install-ubuntu.sh -o install-ubuntu.sh
