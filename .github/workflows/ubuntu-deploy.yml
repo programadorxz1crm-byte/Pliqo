@@ -1,0 +1,52 @@
+name: Deploy to Ubuntu Server
+
+on:
+  workflow_dispatch:
+    inputs:
+      frontend_domain:
+        description: 'Frontend domain (e.g., pliqo.gonzabot.lat)'
+        required: true
+        default: 'pliqo.gonzabot.lat'
+      backend_domain:
+        description: 'Backend domain (e.g., botapi.gonzabot.lat)'
+        required: true
+        default: 'botapi.gonzabot.lat'
+      certbot_email:
+        description: 'Email for Let’s Encrypt certificates'
+        required: true
+        default: 'admin@example.com'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install to remote Ubuntu via SSH
+        uses: appleboy/ssh-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          port: ${{ secrets.SSH_PORT }}
+          script_stop: true
+          timeout: 120s
+          command_timeout: 30m
+          script: |
+            set -e
+            echo "Connected to $HOSTNAME"
+            sudo apt-get update -y
+            # Fetch installer script from repo
+            curl -fsSL https://raw.githubusercontent.com/programadorxz1crm-byte/Pliqo/main/deploy/install-ubuntu.sh -o install-ubuntu.sh
+            sudo bash install-ubuntu.sh --frontend=${{ github.event.inputs.frontend_domain }} --backend=${{ github.event.inputs.backend_domain }} --email=${{ github.event.inputs.certbot_email }}
+            # Health checks
+            echo "Checking backend health at https://${{ github.event.inputs.backend_domain }}/"
+            if ! curl -sSf https://${{ github.event.inputs.backend_domain }}/ > /dev/null ; then
+              echo "Backend health check failed"; exit 1;
+            fi
+            echo "Checking frontend proxy health at https://${{ github.event.inputs.frontend_domain }}/api/"
+            if ! curl -sSf https://${{ github.event.inputs.frontend_domain }}/api/ > /dev/null ; then
+              echo "Frontend proxy health check failed"; exit 1;
+            fi
+            echo "Deployment successful."
