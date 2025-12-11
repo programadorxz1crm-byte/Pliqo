@@ -4,7 +4,7 @@ set -euo pipefail
 # ===== Pliqo deploy script (Ubuntu) =====
 # - Frontend: HTTPS on pliqo.gonzabot.lat (Vite static)
 # - Backend:  HTTPS on botapi.gonzabot.lat (Node via PM2)
-# - Nginx proxy: /api on frontend -> backend (avoid CORS)
+# - Nginx: frontend sirve estático; frontend consume backend directo (sin /api proxy)
 # - SSL: Let's Encrypt certificates for both domains
 #
 # Usage:
@@ -81,11 +81,11 @@ curl -fsS "http://127.0.0.1:$BACKEND_PORT/" || true
 echo "\n[6/8] Building frontend..."
 cd "$FRONTEND_DIR"
 npm install
-export VITE_API_URL="/api"
+export VITE_API_URL="https://$BACKEND_DOMAIN"
 npm run build
 rsync -av --delete "$FRONTEND_DIR/dist/" "$WEBROOT/"
 
-echo "\n[7/8] Configuring Nginx (frontend + backend + proxy)..."
+echo "\n[7/8] Configuring Nginx (frontend + backend, sin proxy)..."
 rm -f /etc/nginx/sites-enabled/default || true
 
 cat >/etc/nginx/sites-available/pliqo-frontend <<CONF
@@ -98,17 +98,6 @@ server {
 
   location / {
     try_files \$uri \$uri/ /index.html;
-  }
-
-  location /api/ {
-    proxy_pass http://127.0.0.1:$BACKEND_PORT/;
-    proxy_http_version 1.1;
-    proxy_set_header Upgrade \$http_upgrade;
-    proxy_set_header Connection "upgrade";
-    proxy_set_header Host \$host;
-    proxy_set_header X-Real-IP \$remote_addr;
-    proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
-    proxy_set_header X-Forwarded-Proto \$scheme;
   }
 }
 CONF
@@ -143,6 +132,6 @@ systemctl status certbot.timer || true
 
 echo "\nDone. Verify:"
 echo "  https://$BACKEND_DOMAIN/         => {\"ok\":true}"
-echo "  https://$FRONTEND_DOMAIN/api/    => {\"ok\":true}"
+echo "  https://$FRONTEND_DOMAIN/        => carga frontend (SPA)"
 echo "  https://$FRONTEND_DOMAIN/register"
 echo "Logs: 'pm2 logs pliqo-backend' | Restart: 'pm2 restart pliqo-backend'"

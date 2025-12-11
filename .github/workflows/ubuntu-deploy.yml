@@ -45,8 +45,8 @@ jobs:
             if ! curl -sSf https://${{ github.event.inputs.backend_domain }}/ > /dev/null ; then
               echo "Backend health check failed"; exit 1;
             fi
-            echo "Checking frontend proxy health at https://${{ github.event.inputs.frontend_domain }}/api/"
-            if ! curl -sSf https://${{ github.event.inputs.frontend_domain }}/api/ > /dev/null ; then
-              echo "Frontend proxy health check failed"; exit 1;
+            echo "Checking frontend site at https://${{ github.event.inputs.frontend_domain }}/"
+            if ! curl -sSfI https://${{ github.event.inputs.frontend_domain }}/ > /dev/null ; then
+              echo "Frontend site health check failed"; exit 1;
             fi
             echo "Deployment successful."

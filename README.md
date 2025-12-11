@@ -20,14 +20,14 @@ sudo bash deploy/install-ubuntu.sh --frontend=pliqo.gonzabot.lat --backend=botap
 El script:
 - Instala Node 18, Nginx, Certbot y PM2.
 - Arranca el backend en PM2 con datos en `/var/lib/pliqo-data`.
-- Construye el frontend con `VITE_API_URL=/api`.
-- Configura Nginx para servir el frontend y proxy `/api` → backend.
+- Construye el frontend con `VITE_API_URL=https://<backend_domain>`.
+- Configura Nginx para servir el frontend y el backend en dominios separados (sin proxy `/api`).
 - Emite certificados SSL y habilita redirección a HTTPS.
 
 3) Verificación
 - `https://botapi.gonzabot.lat/` → `{ "ok": true }`
-- `https://pliqo.gonzabot.lat/api/` → `{ "ok": true }`
-- `https://pliqo.gonzabot.lat/register` → formulario funcional (POST a `/api/auth/register`).
+- `https://pliqo.gonzabot.lat/` → carga el sitio (SPA)
+- `https://pliqo.gonzabot.lat/register` → formulario funcional (POST hacia `https://botapi.gonzabot.lat/auth/register`).
 
 Logs y administración:
 - `pm2 status`, `pm2 logs pliqo-backend`, `pm2 restart pliqo-backend`.
@@ -53,12 +53,12 @@ Configúralos en GitHub → Settings → Secrets and variables → Actions → N
 3. El workflow se conectará por SSH y ejecutará el instalador:
    - Instala Node 18, Nginx, Certbot, PM2.
    - Inicia backend en `127.0.0.1:4000` con PM2.
-   - Construye frontend con `VITE_API_URL=/api` y publica en Nginx.
-   - Configura proxy `/api` → backend y activa SSL para ambos dominios.
+   - Construye frontend con `VITE_API_URL=https://<backend_domain>` y publica en Nginx.
+   - Configura Nginx para frontend y backend en dominios separados; activa SSL.
 
 ### Validación y salud
 - Backend: `curl https://<backend_domain>/` debe responder `{"ok":true}`.
-- Frontend proxy: `curl https://<frontend_domain>/api/` debe responder `{"ok":true}`.
+- Frontend: `curl -I https://<frontend_domain>/` debe responder `200` y servir HTML.
 
 ### Requisitos previos
 - DNS de `frontend_domain` y `backend_domain` apuntan al servidor.
